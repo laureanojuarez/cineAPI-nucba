@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import bcrypt from "bcryptjs";
 
 // Routes
 import authRoutes from "./routes/auth.routes.js";
@@ -43,7 +44,7 @@ const startServer = async () => {
     await sequelize.sync();
 
     // Crear usuario admin por defecto si no existe
-    const Usuario = sequelize.models.Usuario;
+    const Usuario = sequelize.models.User
     const adminExists = await Usuario.findOne({ where: { email: "admin@gmail.com" } });
     
     if (!adminExists) {
