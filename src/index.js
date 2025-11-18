@@ -42,24 +42,20 @@ const startServer = async () => {
 
     await sequelize.sync();
 
-  app.post("/make-admin", async (req, res) => {
-  try {
-    const { email } = req.body;
+    // Crear usuario admin por defecto si no existe
     const Usuario = sequelize.models.Usuario;
+    const adminExists = await Usuario.findOne({ where: { email: "admin@gmail.com" } });
     
-    const user = await Usuario.findOne({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash("admin", 10);
+      await Usuario.create({
+        username: "admin",
+        email: "admin@gmail.com",
+        password: hashedPassword,
+        role: "admin"
+      });
+      console.log("Usuario admin creado: admin@gmail.com / admin");
     }
-    
-    user.role = "admin";
-    await user.save();
-    
-    res.json({ message: "Admin creado exitosamente", email: user.email, role: user.role });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
