@@ -48,7 +48,7 @@ const startServer = async () => {
     const adminExists = await Usuario.findOne({ where: { email: "admin@gmail.com" } });
     
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash("admin", 10);
+      const hashedPassword = bcrypt.hashSync("admin", 10);
       await Usuario.create({
         username: "admin",
         email: "admin@gmail.com",
