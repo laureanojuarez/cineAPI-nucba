@@ -32,6 +32,24 @@ app.use("/salas", salaRoutes);
 app.use("/reservas", reservaRoutes);
 app.use("/profile", profileRoutes);
 app.use("/funciones", funcionesRoutes);
+app.post("/make-admin", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const Usuario = sequelize.models.Usuario;
+    
+    const user = await Usuario.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+    
+    user.role = "admin";
+    await user.save();
+    
+    res.json({ message: "Admin creado exitosamente", email: user.email, role: user.role });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Database connection and server start
 const startServer = async () => {
