@@ -32,7 +32,17 @@ app.use("/salas", salaRoutes);
 app.use("/reservas", reservaRoutes);
 app.use("/profile", profileRoutes);
 app.use("/funciones", funcionesRoutes);
-app.post("/make-admin", async (req, res) => {
+
+
+// Database connection and server start
+const startServer = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Database connected successfully.");
+
+    await sequelize.sync();
+
+  app.post("/make-admin", async (req, res) => {
   try {
     const { email } = req.body;
     const Usuario = sequelize.models.Usuario;
@@ -50,14 +60,6 @@ app.post("/make-admin", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Database connection and server start
-const startServer = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("Database connected successfully.");
-
-    await sequelize.sync();
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
