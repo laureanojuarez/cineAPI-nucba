@@ -33,7 +33,6 @@ app.use("/reservas", reservaRoutes);
 app.use("/profile", profileRoutes);
 app.use("/funciones", funcionesRoutes);
 
-
 // Database connection and server start
 const startServer = async () => {
   try {
